@@ -34,7 +34,8 @@ except discogs_client.exceptions.HTTPError:
 folder = sys.argv[1]
 file_names = glob.glob(folder+'*.mp3')
 tracklist = open('Playlist.txt', 'w')
-playtracks = open('Trackids.txt', 'w')
+if disco_check == True:
+	playtracks = open('Trackids.txt', 'w')
 total_time = 0.0
 
 for name in file_names:
