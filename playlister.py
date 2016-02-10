@@ -36,6 +36,9 @@ if len(sys.argv) > 1:
 else:
 	folder = './'
 file_names = glob.glob(folder+'*.mp3')
+if len(file_names) < 1:
+	print "There are no mp3 files in your folder."
+	sys.exit(0)
 tracklist = open('Playlist.txt', 'w')
 if disco_check == True:
 	playtracks = open('Trackids.txt', 'w')
@@ -56,36 +59,38 @@ for name in file_names:
 		results = d.search(song, type='release')
 		trackline = ''
 		track_ids = []
-		print len(results)
-		for i in range(25):
-			page = results[i-1]
-			if artist in page.artists[0].name:
-
-				artist = page.artists[0].name
-				album = page.title
-				year = str(page.year)
-				country = page.country
-				label = page.labels[0].name
-				note = ''
-				data = page.data
-				for key in data:
-					if key == "notes":
-						note += data[key].replace('\n', ' ').replace('\r', ' ').replace('  ', ' ')
-				trackline = (artist, album, year, country, label, note)
-				track_ids.append(trackline)
-		if len(track_ids) > 0:
-			sortedtrackids = sorted(track_ids, key=lambda tup: int(tup[2]), reverse=True)
-			track = sortedtrackids.pop()
-			while(int(track[2]) < 1900):
+		results_nb = len(results)
+		if results_nb > 0:
+			if results_nb > 25:
+				results_nb = 25
+			for i in range(results_nb):
+				page = results[i-1]
+				if artist in page.artists[0].name:
+					artist = page.artists[0].name
+					album = page.title
+					year = str(page.year)
+					country = page.country
+					label = page.labels[0].name
+					note = ''
+					data = page.data
+					for key in data:
+						if key == "notes":
+							note += data[key].replace('\n', ' ').replace('\r', ' ').replace('  ', ' ')
+					trackline = (artist, album, year, country, label, note)
+					track_ids.append(trackline)
+			if len(track_ids) > 0:
+				sortedtrackids = sorted(track_ids, key=lambda tup: int(tup[2]), reverse=True)
 				track = sortedtrackids.pop()
-			trackline = track[0] + ' / ' + track[1] + ' / ' + track[2] + ' / ' + track[3] + ' / ' + track[4]
-			if track[5] != '':
-				trackline += ' // ' + track[5].replace('\n', ' ').replace('  ', ' ')
-			trackline += '\n'
-		else:
-			trackline = "rien / trouvé / pour / ce / track\n"
+				while(int(track[2]) < 1900):
+					track = sortedtrackids.pop()
+				trackline = track[0] + ' / ' + track[1] + ' / ' + track[2] + ' / ' + track[3] + ' / ' + track[4]
+				if track[5] != '':
+					trackline += ' // ' + track[5].replace('\n', ' ').replace('  ', ' ')
+				trackline += '\n'
+			else:
+				trackline = song + ' - ' + artist + ' : ' + "found nothing on Discogs for this track\n"
 
-		playtracks.write(trackline)
+			playtracks.write(trackline)
 
 tracklist.write(time.strftime('%H:%M:%S', time.gmtime(total_time)))
 
