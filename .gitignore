@@ -7,3 +7,14 @@ conf.json
 # .DS_Store
 #
 .DS_store
+
+#
+# Test mp3
+#
+Codine - The Litter.mp3
+
+#
+# Test result files
+#
+Playlist.txt
+Trackids.txt
