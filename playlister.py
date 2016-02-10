@@ -14,6 +14,7 @@ if os.path.exists('conf.json') :
 	with open('conf.json') as file :
 		conf = json.load(file)
 		disco_check = True
+		user = conf["user"]
 		token = conf['user_token']
 else :
 	token = raw_input("T'as pas de conf.json avec ton token discogs dedans, donne-le moi : ")
@@ -23,7 +24,7 @@ else :
 	else:
 		print "C'est pas un token de discogs ce que tu m'as filé..."
 
-d = discogs_client.Client('Voix de Garage', user_token=token)
+d = discogs_client.Client(user, user_token=token)
 
 folder = sys.argv[1]
 file_names = glob.glob(folder+'*.mp3')
