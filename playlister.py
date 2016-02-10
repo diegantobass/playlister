@@ -10,26 +10,26 @@ from mutagen.mp3 import MP3
 import time
 
 disco_check = False
-if os.path.exists('conf.json') :
-	with open('conf.json') as file :
-		conf = json.load(file)
-		disco_check = True
-		user = conf["user"]
-		token = conf['user_token']
-else :
-	user = raw_input("No conf file provided. Please enter your Discogs app username : ")
-	token = raw_input("Enter your Discogs user token : ") 
-	if len(token) > 10:
-		disco_check = True
-		print "Thanks, now be patient."
+disco_user = raw_input("Do you want to check the Discogs API to find information on your mp3 file ? [yes/no] ")
 
-d = discogs_client.Client(user, user_token=token)
-test_discogs_client = d.search("Moonage Daydream", type='release')
-try:
-	test_moonage = test_discogs_client[0]
-except discogs_client.exceptions.HTTPError:
-	disco_check = False
-	print "Information provided for the Discogs API weren't correct. Continuing without it."
+if disco_user.lower() == "yes" or disco_user.lower() == "y" or disco_user == "ye" or disco_user == "ya":
+	if os.path.exists('conf.json') :
+		with open('conf.json') as file :
+			conf = json.load(file)
+			disco_check = True
+			user = conf["user"]
+			token = conf['user_token']
+	else :
+		user = raw_input("No conf file provided. Please enter your Discogs app username : ")
+		token = raw_input("Enter your Discogs user token : ")
+
+	d = discogs_client.Client(user, user_token=token)
+	test_discogs_client = d.search("Moonage Daydream", type='release')
+	try:
+		test_moonage = test_discogs_client[0]
+	except discogs_client.exceptions.HTTPError:
+		disco_check = False
+		print "Information provided for the Discogs API weren't correct. Continuing without it."
 
 if len(sys.argv) > 1:
 	folder = sys.argv[1]
@@ -83,12 +83,12 @@ for name in file_names:
 				track = sortedtrackids.pop()
 				while(int(track[2]) < 1900):
 					track = sortedtrackids.pop()
-				trackline = track[0] + ' / ' + track[1] + ' / ' + track[2] + ' / ' + track[3] + ' / ' + track[4]
+				trackline = song + ' / ' + track[0].replace('/', '&') + ' / ' + track[1].replace('/', '+') + ' / ' + track[2] + ' / ' + track[3].replace('/', '&') + ' / ' + track[4].replace('/', '&')
 				if track[5] != '':
-					trackline += ' // ' + track[5].replace('\n', ' ').replace('  ', ' ')
+					trackline += ' // ' + track[5].replace('/', ' ').replace('  ', ' ')
 				trackline += '\n'
 
-			playtracks.write(trackline)
+			playtracks.write(trackline.encode('utf-8'))
 
 tracklist.write(time.strftime('%H:%M:%S', time.gmtime(total_time)))
 
