@@ -17,10 +17,11 @@ if os.path.exists('conf.json') :
 		user = conf["user"]
 		token = conf['user_token']
 else :
-	token = raw_input("T'as pas de conf.json avec ton token discogs dedans, donne-le moi : ")
+	user = raw_input("No conf file provided. Please enter your Discogs app username : ")
+	token = raw_input("Enter your Discogs user token : ") 
 	if len(token) > 10:
 		disco_check = True
-		print "Ok cool, cimer. Patience."
+		print "Thanks, now be patient."
 	else:
 		print "C'est pas un token de discogs ce que tu m'as filé..."
 
