@@ -31,7 +31,10 @@ except discogs_client.exceptions.HTTPError:
 	disco_check = False
 	print "Information provided for the Discogs API weren't correct. Continuing without it."
 
-folder = sys.argv[1]
+if len(sys.argv) > 1:
+	folder = sys.argv[1]
+else:
+	folder = './'
 file_names = glob.glob(folder+'*.mp3')
 tracklist = open('Playlist.txt', 'w')
 if disco_check == True:
@@ -46,15 +49,16 @@ for name in file_names:
 	song_length = MP3(name).info.length
 	total_time += song_length
 	song_length = time.strftime('%M:%S', time.gmtime(song_length))
-	os.rename(name, new_name)
+	os.rename(name, folder + new_name)
 	tracklist.write(song_length + ' - ' + new_name[:-4] + '\n')
 
 	if disco_check == True:
 		results = d.search(song, type='release')
 		trackline = ''
 		track_ids = []
+		print len(results)
 		for i in range(25):
-			page = results[i]
+			page = results[i-1]
 			if artist in page.artists[0].name:
 
 				artist = page.artists[0].name
