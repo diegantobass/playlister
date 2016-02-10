@@ -22,10 +22,14 @@ else :
 	if len(token) > 10:
 		disco_check = True
 		print "Thanks, now be patient."
-	else:
-		print "C'est pas un token de discogs ce que tu m'as filé..."
 
 d = discogs_client.Client(user, user_token=token)
+test_discogs_client = d.search("Moonage Daydream", type='release')
+try:
+	test_moonage = test_discogs_client[0]
+except discogs_client.exceptions.HTTPError:
+	disco_check = False
+	print "Information provided for the Discogs API weren't correct. Continuing without it."
 
 folder = sys.argv[1]
 file_names = glob.glob(folder+'*.mp3')
@@ -46,7 +50,6 @@ for name in file_names:
 
 	if disco_check == True:
 		results = d.search(song, type='release')
-		# results = d.search("Codine", type='release')
 		trackline = ''
 		track_ids = []
 		for i in range(25):
