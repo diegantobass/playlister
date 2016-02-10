@@ -61,8 +61,8 @@ for name in file_names:
 		track_ids = []
 		results_nb = len(results)
 		if results_nb > 0:
-			if results_nb > 25:
-				results_nb = 25
+			if results_nb > 50:
+				results_nb = 50
 			for i in range(results_nb):
 				page = results[i]
 				if artist in page.artists[0].name:
@@ -87,8 +87,6 @@ for name in file_names:
 				if track[5] != '':
 					trackline += ' // ' + track[5].replace('\n', ' ').replace('  ', ' ')
 				trackline += '\n'
-			# else:
-			# 	trackline = song + ' - ' + artist + ' : ' + "found nothing on Discogs for this track\n"
 
 			playtracks.write(trackline)
 
