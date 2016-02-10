@@ -39,14 +39,14 @@ file_names = glob.glob(folder+'*.mp3')
 if len(file_names) < 1:
 	print "There are no mp3 files in your folder."
 	sys.exit(0)
-tracklist = open('Playlist.txt', 'w')
+tracklist = open(folder + 'Playlist.txt', 'w')
 if disco_check == True:
-	playtracks = open('Trackids.txt', 'w')
+	playtracks = open(folder + 'Trackids.txt', 'w')
 total_time = 0.0
 
 for name in file_names:
-	artist = name.split('/')[1].split('.')[0].split('-')[0].strip()
-	song = name.split('/')[1].split('.')[0].split('-')[1].strip()
+	artist = name.split('/')[-1].split('.')[0].split('-')[0].strip()
+	song = name.split('/')[-1].split('.')[0].split('-')[1].strip()
 
 	new_name = song + ' - ' + artist + '.mp3'
 	song_length = MP3(name).info.length
@@ -64,7 +64,7 @@ for name in file_names:
 			if results_nb > 25:
 				results_nb = 25
 			for i in range(results_nb):
-				page = results[i-1]
+				page = results[i]
 				if artist in page.artists[0].name:
 					artist = page.artists[0].name
 					album = page.title
@@ -87,8 +87,8 @@ for name in file_names:
 				if track[5] != '':
 					trackline += ' // ' + track[5].replace('\n', ' ').replace('  ', ' ')
 				trackline += '\n'
-			else:
-				trackline = song + ' - ' + artist + ' : ' + "found nothing on Discogs for this track\n"
+			# else:
+			# 	trackline = song + ' - ' + artist + ' : ' + "found nothing on Discogs for this track\n"
 
 			playtracks.write(trackline)
 
