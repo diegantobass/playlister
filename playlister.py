@@ -34,11 +34,11 @@ if sys.argv[-1] == "--check":
 		disco_check = False
 		print "Information provided for the Discogs API weren't correct. Continuing without it."
 
-if len(sys.argv) > 1:
+if len(sys.argv) > 1 and sys.argv[1] != "--check":
 	folder = sys.argv[1]
 else:
 	folder = './'
-	
+
 file_names = glob.glob(folder+'*.mp3')
 if len(file_names) < 1:
 	print "There are no mp3 files in your folder."
