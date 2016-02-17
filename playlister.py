@@ -13,11 +13,11 @@ if '/' in sys.argv[0]:
 	script_folder = sys.argv[0].split('/')[:-1]
 else:
 	script_folder = './'
-disco_check = False
 
+disco_check = False
 if sys.argv[-1] == "--check":
-	if os.path.exists('conf.json'):
-		with open('conf.json') as file :
+	if os.path.exists(os.path.join(script_folder, 'conf.json')):
+		with open(os.path.join(script_folder, 'conf.json')) as file :
 			conf = json.load(file)
 			disco_check = True
 			user = conf["user"]
@@ -38,6 +38,7 @@ if len(sys.argv) > 1:
 	folder = sys.argv[1]
 else:
 	folder = './'
+	
 file_names = glob.glob(folder+'*.mp3')
 if len(file_names) < 1:
 	print "There are no mp3 files in your folder."
