@@ -9,11 +9,14 @@ import discogs_client
 from mutagen.mp3 import MP3
 import time
 
+if '/' in sys.argv[0]:
+	script_folder = sys.argv[0].split('/')[:-1]
+else:
+	script_folder = './'
 disco_check = False
-disco_user = raw_input("Do you want to check the Discogs API to find information on your mp3 file ? [yes/no] ")
 
-if disco_user.lower() == "yes" or disco_user.lower() == "y" or disco_user == "ye" or disco_user == "ya":
-	if os.path.exists('conf.json') :
+if sys.argv[-1] == "--check":
+	if os.path.exists('conf.json'):
 		with open('conf.json') as file :
 			conf = json.load(file)
 			disco_check = True
