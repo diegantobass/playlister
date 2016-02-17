@@ -10,7 +10,7 @@ from mutagen.mp3 import MP3
 import time
 
 if '/' in sys.argv[0]:
-	script_folder = sys.argv[0].split('/')[:-1]
+	script_folder = '/'.join(sys.argv[0].split('/')[:-1])
 else:
 	script_folder = './'
 
