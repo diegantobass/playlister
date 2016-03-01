@@ -9,10 +9,24 @@ import discogs_client
 from mutagen.mp3 import MP3
 import time
 
+mp3_folder = "mp3_files/"
+
 if '/' in sys.argv[0]:
 	script_folder = '/'.join(sys.argv[0].split('/')[:-1])
 else:
 	script_folder = './'
+	
+if os.path.exists(mp3_folder):
+	file_names = glob.glob(mp3_folder+'*.mp3')
+else:
+    os.makedirs(mp3_folder)
+
+lista = open(sys.argv[1], 'r')
+for link in lista:
+	splitted_line = link.split(' : ')
+	if (mp3_folder + splitted_line[0] + ".mp3") not in file_names:
+		dl_command = "youtube-dl -x --audio-format mp3 -o '" + mp3_folder + splitted_line[0] + ".%(ext)s' " + splitted_line[1]
+		os.system(dl_command)
 
 disco_check = False
 if sys.argv[-1] == "--check":
@@ -34,30 +48,23 @@ if sys.argv[-1] == "--check":
 		disco_check = False
 		print "Information provided for the Discogs API weren't correct. Continuing without it."
 
-if len(sys.argv) > 1 and sys.argv[1] != "--check":
-	folder = sys.argv[1]
-else:
-	folder = './'
-
-file_names = glob.glob(folder+'*.mp3')
+file_names = glob.glob(mp3_folder+'*.mp3')
 if len(file_names) < 1:
 	print "There are no mp3 files in your folder."
 	sys.exit(0)
-tracklist = open(folder + 'Playlist.txt', 'w')
+tracklist = open(mp3_folder + 'Playlist.txt', 'w')
 if disco_check == True:
-	playtracks = open(folder + 'Trackids.txt', 'w')
+	playtracks = open(mp3_folder + 'Trackids.txt', 'w')
 total_time = 0.0
 
 for name in file_names:
-	artist = name.split('/')[-1].split('.')[0].split('-')[0].strip()
-	song = name.split('/')[-1].split('.')[0].split('-')[1].strip()
+	song = name.split('/')[-1].split('.')[0].split('-')[0].strip()
+	artist = name.split('/')[-1].split('.')[0].split('-')[1].strip()
 
-	new_name = song + ' - ' + artist + '.mp3'
 	song_length = MP3(name).info.length
 	total_time += song_length
 	song_length = time.strftime('%M:%S', time.gmtime(song_length))
-	os.rename(name, folder + new_name)
-	tracklist.write(song_length + ' - ' + new_name[:-4] + '\n')
+	tracklist.write(song_length + ' - ' + name[10:-4] + '\n')
 
 	if disco_check == True:
 		results = d.search(song, type='release')
@@ -95,6 +102,3 @@ for name in file_names:
 			playtracks.write(trackline.encode('utf-8'))
 
 tracklist.write(time.strftime('%H:%M:%S', time.gmtime(total_time)))
-
-
-
