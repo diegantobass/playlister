@@ -11,7 +11,7 @@ from mutagen.mp3 import MP3
 import time
 import argparse
 
-# Function needed to check the validity/existence of the list of link specified as arg
+# Test existence of file
 def is_valid_file(parser, arg):
     if not os.path.exists(arg):
         parser.error("The file %s does not exist" % arg)
@@ -100,7 +100,7 @@ else:
 		song_length = MP3(fullname).info.length
 		total_time += song_length
 		song_length = time.strftime('%M:%S', time.gmtime(song_length))
-		tracklist.write(song_length + ' - ' + name + '\n')
+		tracklist.write(song_length + ' - ' + name[:-4] + '\n')
 
 		if args.disco_check:
 			results = d.search(song, type='release')
