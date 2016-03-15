@@ -43,14 +43,10 @@ else:
     os.makedirs(args.folder)
     file_names = []
 
-print file_names
-
 # If a list of links to download is specified, download it and add them to the mp3 folder if not already there
 if args.liste:
 	for link in args.liste:
 		splitted_line = link.split(' : ')
-		print args.folder + splitted_line[0] + ".mp3"
-		print ((splitted_line[0] + ".mp3") not in file_names)
 		if (splitted_line[0] + ".mp3") not in file_names:
 			dl_command = 'youtube-dl -x --audio-format mp3 -o "' + args.folder + splitted_line[0] + '.%(ext)s" ' + splitted_line[1]
 			os.system(dl_command)
