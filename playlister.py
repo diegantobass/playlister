@@ -11,6 +11,8 @@ from mutagen.mp3 import MP3
 import time
 import argparse
 
+# Un simple commentaire d'exemple
+
 # Test existence of file
 def is_valid_file(parser, arg):
     if not os.path.exists(arg):
@@ -45,7 +47,7 @@ else:
 
 # If a list of links to download is specified, download it and add them to the mp3 folder if not already there
 if args.liste:
-	for link in args.liste:
+    for link in args.liste:
 		splitted_line = link.split(' : ')
 		if (splitted_line[0] + ".mp3") not in file_names:
 			dl_command = 'youtube-dl -x --audio-format mp3 -o "' + args.folder + splitted_line[0] + '.%(ext)s" ' + splitted_line[1]
@@ -72,7 +74,7 @@ if args.disco_check:
 		disco_check = False
 		print "Information provided for the Discogs API weren't correct. Continuing without it."
 
-# Connects to the music brainz API if specified in args	
+# Connects to the music brainz API if specified in args
 if args.mb_check:
 	id_mb = open(args.folder + 'idmb.txt', 'w')
 	mb = musicbrainzngs.set_useragent("Voix de Garage", "0.1")
@@ -89,13 +91,13 @@ if len(file_names) < 1:
 
 # Do the stuff
 else:
-	tracklist = open(args.folder + 'Playlist.txt', 'w')	
+	tracklist = open(args.folder + 'Playlist.txt', 'w')
 	total_time = 0.0
 
 	for name in file_names:
 		fullname = os.path.join(args.folder + name)
 		song = name.split('.')[0].split('-')[0].strip()
-		artist = name.split('.')[0].split('-')[1].strip()
+        artist = name.split('.')[0].split('-')[1].strip()
 
 		song_length = MP3(fullname).info.length
 		total_time += song_length
@@ -158,5 +160,3 @@ else:
 				id_mb.write(trackline_mb.encode('utf-8'))
 
 	tracklist.write(time.strftime('%H:%M:%S', time.gmtime(total_time)))
-
-
